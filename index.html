@@ -382,12 +382,17 @@
         </div>
     </div>
 
-    <script>
+ <script>
         // State variables
         let isMiles = true;
-        let isPerGallon = true;
+        let isPerGallon = false; // Changed to false so it defaults to UK Liter pricing
         let isMPG = true;
         let isReturn = false;
+
+        // Fuel variables to store data from prices.json
+        let petrolPrice = 1.48; // Fallback value
+        let dieselPrice = 1.59; // Fallback value
+        let currentFuelType = 'unleaded'; // Tracking if user wants unleaded or diesel
 
         // Constants
         const GALLONS_PER_LITER = 0.264172;
@@ -408,10 +413,41 @@
         const singleCostEl = document.getElementById('singleCost');
         const returnCostEl = document.getElementById('returnCost');
 
+        // NEW: Fetch live data from your prices.json file
+        fetch('prices.json')
+            .then(response => response.json())
+            .then(data => {
+                petrolPrice = data.petrol_per_litre;
+                dieselPrice = data.diesel_per_litre;
+                
+                // Update the input field with the live price right away
+                updateFuelPriceField();
+            })
+            .catch(error => {
+                console.log("Could not load prices.json, using fallback prices.", error);
+                updateFuelPriceField();
+            });
+
+        // NEW: Helper function to swap prices when fuel type changes
+        function updateFuelPriceField() {
+            fuelPriceInput.value = (currentFuelType === 'diesel') ? dieselPrice : petrolPrice;
+            calculate();
+        }
+
         // Event listeners for live calculation
         distanceInput.addEventListener('input', calculate);
         fuelPriceInput.addEventListener('input', calculate);
         fuelConsumptionInput.addEventListener('input', calculate);
+
+        // EXTRA: If your HTML has an unleaded/diesel selector, add a change listener to it
+        // If your AI used a button or dropdown, make sure its ID matches 'fuelType'
+        const fuelTypeDropdown = document.getElementById('fuelType');
+        if (fuelTypeDropdown) {
+            fuelTypeDropdown.addEventListener('change', (e) => {
+                currentFuelType = e.target.value; // 'unleaded' or 'diesel'
+                updateFuelPriceField();
+            });
+        }
 
         function toggleDistanceUnit() {
             isMiles = !isMiles;
@@ -463,8 +499,8 @@
             const consumption = parseFloat(fuelConsumptionInput.value) || 0;
 
             if (distance <= 0 || price <= 0 || consumption <= 0) {
-                singleCostEl.innerText = '$0.00';
-                returnCostEl.innerText = '$0.00';
+                singleCostEl.innerText = '£0.00'; // Changed from $ to £
+                returnCostEl.innerText = '£0.00';  // Changed from $ to £
                 return;
             }
 
@@ -492,9 +528,9 @@
             const singleTripCost = gallonsNeeded * pricePerGallon;
             const returnTripCost = singleTripCost * 2;
 
-            // Update UI
-            singleCostEl.innerText = `$${singleTripCost.toFixed(2)}`;
-            returnCostEl.innerText = `$${returnTripCost.toFixed(2)}`;
+            // Update UI with UK Pound formatting
+            singleCostEl.innerText = `£${singleTripCost.toFixed(2)}`;
+            returnCostEl.innerText = `£${returnTripCost.toFixed(2)}`;
         }
     </script>
 </body>
