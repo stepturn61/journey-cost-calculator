@@ -1,62 +1,45 @@
 import urllib.request
-import csv
-import json
-from datetime import datetime
+import re
 
-# TODO: Replace this URL with the exact raw CSV link from the GOV.UK Fuel Finder developer page
-#### CSV_URL = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/YOUR_FILE_ID_HERE/Weekly_Fuel_Prices.csv" #### original ai gave
-CSV_URL = "https://www.developer.fuel-finder.service.gov.uk/access-latest-fuelprices"
+PAGE_URL = "https://www.developer.fuel-finder.service.gov.uk/access-latest-fuelprices"
 
-# TODO: Check the CSV and update these strings to match the exact column names
-UNLEADED_HEADER = "forecourt.fuel_price.E10"
-DIESEL_HEADER = "forecourt.fuel_price.B7S"
-DATE_HEADER = "Date"
+# Column names from the official government CSV layout
+UNLEADED_HEADER = "forecourts.fuel_price.E10"
+DIESEL_HEADER = "forecourts.fuel_price.B7S"
 
 def main():
     try:
-        # Download CSV with a browser disguise (User-Agent header)
-        # This tells the gov.uk server we are a Chrome browser, preventing a 403 error
-        req = urllib.request.Request(
-            CSV_URL, 
-            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+        # Step 1: Request the landing web page disguised as a browser
+        req_page = urllib.request.Request(
+            PAGE_URL, 
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         )
+        html_content = urllib.request.urlopen(req_page).read().decode('utf-8')
         
-        response = urllib.request.urlopen(req)
-        lines = [l.decode('utf-8-sig') for l in response.readlines()]
+        # Step 2: Use an expression to find the temporary messy Amazon CSV link hidden on the page
+        match = re.search(r'href="(https://ff-raw-data-bronze-ics-prod.s3.[^"]+\.csv[^"]*)"', html_content)
         
-        # Parse CSV
-        reader = csv.DictReader(lines)
-        rows = list(reader)
-        
-        if not rows:
-            print("No data found in CSV")
+        if not match:
+            print("Could not find the dynamic CSV link on the government page.")
             return
             
-        # Get the most recent row (usually the last row in the GOV UK dataset)
-        latest_row = rows[-1]
+        csv_url = match.group(1).replace('&amp;', '&')
+        print(f"Success! Found today's live data link: {csv_url[:60]}...")
+
+        # Step 3: Now fetch the actual spreadsheet content using that fresh link
+        req_csv = urllib.request.Request(
+            csv_url,
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+        )
+        response = urllib.request.urlopen(req_csv)
+        lines = [l.decode('utf-8-sig') for l in response.readlines()]
+        print(f"Successfully downloaded {len(lines)} lines of fuel data.")
         
-        # Extract values (Prices in UK Gov CSV are usually in Pence per Litre)
-        unleaded_ppl = float(latest_row[UNLEADED_HEADER])
-        diesel_ppl = float(latest_row[DIESEL_HEADER])
-        date_str = latest_row[DATE_HEADER]
-        
-        # Convert pence to pounds (£)
-        data = {
-            "unleaded": round(unleaded_ppl / 100, 3),
-            "diesel": round(diesel_ppl / 100, 3),
-            "last_updated": date_str
-        }
-        
-        # Write to JSON
-        with open('prices.json', 'w') as f:
-            json.dump(data, f, indent=2)
-            
-        print(f"Successfully updated prices.json: {data}")
+        # (Your AI's remaining calculations and file saving logic should stay right below here)
         
     except Exception as e:
-        print(f"Error fetching/parsing CSV: {e}")
-        # Exit with error code so GitHub Action flags it as a failure
-        exit(1)
+        print(f"Error fetching or parsing data: {e}")
+        raise e
 
 if __name__ == "__main__":
     main()
