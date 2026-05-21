@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
         // State variables
         let isMiles = true;
         let isPerLitre = true; // Default UK
@@ -195,32 +195,43 @@
         fuelPriceInput.addEventListener('input', calculate);
         fuelConsumptionInput.addEventListener('input', calculate);
 
-        // Fetch Live Prices on load
+        // Fetch Live Prices on load from our clean JSON file
         window.onload = () => {
             fetch('./prices.json')
                 .then(res => res.json())
                 .then(data => {
                     livePrices = data;
-                    document.getElementById('liveBadge').classList.remove('hidden');
-                    document.getElementById('liveDate').innerText = data.last_updated;
+                    
+                    // Show the live date badge from your json
+                    const liveBadge = document.getElementById('liveBadge');
+                    const liveDate = document.getElementById('liveDate');
+                    if (liveBadge) liveBadge.classList.remove('hidden');
+                    if (liveDate) liveDate.innerText = data.last_updated;
+                    
                     updateLivePrice();
                 })
-                .catch(err => console.log("Live prices not available, using manual input."));
+                .catch(err => console.log("Live prices not available, using manual input.", err));
         };
 
         function setFuelType(type) {
             currentFuelType = type;
-            document.getElementById('petrol(E10)Btn').classList.toggle('active', type === 'petrol(E10)(E10)');
-            document.getElementById('dieselBtn').classList.toggle('active', type === 'diesel');
+            
+            // Fixed the double '(E10)(E10)' typo here so active classes toggle nicely
+            const petrolBtn = document.getElementById('petrol(E10)Btn');
+            const dieselBtn = document.getElementById('dieselBtn');
+            if (petrolBtn) petrolBtn.classList.toggle('active', type === 'petrol(E10)');
+            if (dieselBtn) dieselBtn.classList.toggle('active', type === 'diesel');
+            
             updateLivePrice();
             calculate();
         }
 
         function updateLivePrice() {
             if (livePrices) {
-                // Live prices from Gov CSV are in £/litre (converted in python script)
                 if (!isPerLitre) togglePriceUnit(); // Ensure we are on /Litre to apply live price
-                fuelPriceInput.value = currentFuelType === 'petrol(E10)' ? livePrices.unleaded : livePrices.diesel;
+                
+                // MATCHED TO YOUR JSON: Uses petrol_per_litre and diesel_per_litre keys cleanly
+                fuelPriceInput.value = currentFuelType === 'petrol(E10)' ? livePrices.petrol_per_litre : livePrices.diesel_per_litre;
             }
         }
 
