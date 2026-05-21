@@ -167,7 +167,7 @@
         let isPerLitre = true; // Default UK
         let isMPG = true;      // Default UK
         let isReturn = false;
-        let currentFuelType = 'petrol';
+        let currentFuelType = 'petrol(E10)';
         let livePrices = null;
 
         // UK Specific Constants
@@ -220,7 +220,7 @@
             if (livePrices) {
                 // Live prices from Gov CSV are in £/litre (converted in python script)
                 if (!isPerLitre) togglePriceUnit(); // Ensure we are on /Litre to apply live price
-                fuelPriceInput.value = currentFuelType === 'petrol' ? livePrices.unleaded : livePrices.diesel;
+                fuelPriceInput.value = currentFuelType === 'petrol(E10)' ? livePrices.unleaded : livePrices.diesel;
             }
         }
 
