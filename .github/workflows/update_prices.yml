@@ -1,0 +1,32 @@
+name: Update UK Fuel Prices
+
+on:
+  schedule:
+    # Runs at 6:00 AM and 6:00 PM UTC
+    - cron: '0 6,18 * * *'
+  workflow_dispatch: # Allows you to manually trigger it from the Actions tab
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push the commit
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run script to fetch and parse CSV
+        run: python scripts/fetch_prices.py
+        
+      - name: Commit and push if prices.json changed
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git diff --quiet prices.json || git commit -am "Update fuel prices (automated)"
+          git push
