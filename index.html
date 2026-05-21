@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Journey Cost Calculator | UK Live Fuel Prices</title>
-    <meta name="description" content="Calculate your journey fuel cost with live UK petrol and diesel prices. Supports Miles per Gallon (MPG) and Pence per Litre.">
+    <meta name="description" content="Calculate your journey fuel cost with live UK petrol(E10) and diesel prices. Supports Miles per Gallon (MPG) and Pence per Litre.">
     
     <style>
         :root {
@@ -15,7 +15,7 @@
             --muted: #94a3b8;
             --accent: #3b82f6;
             --success: #10b981;
-            --petrol: #f59e0b;
+            --petrol(E10): #f59e0b;
             --diesel: #8b5cf6;
         }
 
@@ -65,7 +65,7 @@
         .toggle-btn:hover { border-color: var(--accent); color: var(--text); }
         .toggle-btn.active { border-color: var(--accent); background-color: var(--accent); color: white; }
         
-        .toggle-btn.active.petrol { background-color: var(--petrol); border-color: var(--petrol); }
+        .toggle-btn.active.petrol(E10) { background-color: var(--petrol(E10)); border-color: var(--petrol(E10)); }
         .toggle-btn.active.diesel { background-color: var(--diesel); border-color: var(--diesel); }
 
         .switch-container {
@@ -108,7 +108,7 @@
         <div class="input-group">
             <label>Fuel Type</label>
             <div class="btn-group">
-                <button class="toggle-btn petrol active" id="petrolBtn" onclick="setFuelType('petrol(E10)')">Petrol</button>
+                <button class="toggle-btn petrol(E10) active" id="petrol(E10)Btn" onclick="setFuelType('petrol(E10)(E10)')">petrol(E10)</button>
                 <button class="toggle-btn diesel" id="dieselBtn" onclick="setFuelType('diesel')">Diesel</button>
             </div>
         </div>
@@ -210,7 +210,7 @@
 
         function setFuelType(type) {
             currentFuelType = type;
-            document.getElementById('petrolBtn').classList.toggle('active', type === 'petrol(E10)');
+            document.getElementById('petrol(E10)Btn').classList.toggle('active', type === 'petrol(E10)(E10)');
             document.getElementById('dieselBtn').classList.toggle('active', type === 'diesel');
             updateLivePrice();
             calculate();
