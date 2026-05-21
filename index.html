@@ -108,7 +108,7 @@
         <div class="input-group">
             <label>Fuel Type</label>
             <div class="btn-group">
-                <button class="toggle-btn petrol active" id="petrolBtn" onclick="setFuelType('petrol')">Petrol</button>
+                <button class="toggle-btn petrol active" id="petrolBtn" onclick="setFuelType('petrol(E10)')">Petrol</button>
                 <button class="toggle-btn diesel" id="dieselBtn" onclick="setFuelType('diesel')">Diesel</button>
             </div>
         </div>
@@ -210,7 +210,7 @@
 
         function setFuelType(type) {
             currentFuelType = type;
-            document.getElementById('petrolBtn').classList.toggle('active', type === 'petrol');
+            document.getElementById('petrolBtn').classList.toggle('active', type === 'petrol(E10)');
             document.getElementById('dieselBtn').classList.toggle('active', type === 'diesel');
             updateLivePrice();
             calculate();
