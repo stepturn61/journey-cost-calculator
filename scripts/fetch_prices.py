@@ -5,7 +5,7 @@ from datetime import datetime
 
 # TODO: Replace this URL with the exact raw CSV link from the GOV.UK Fuel Finder developer page
 #### CSV_URL = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/YOUR_FILE_ID_HERE/Weekly_Fuel_Prices.csv" #### original ai gave
-CSV_URL ="https://www.developer.fuel-finder.service.gov.uk/access-latest-fuelprices"
+CSV_URL = "https://www.developer.fuel-finder.service.gov.uk/access-latest-fuelprices"
 
 # TODO: Check the CSV and update these strings to match the exact column names
 UNLEADED_HEADER = "forecourt.fuel_price.E10"
@@ -14,8 +14,14 @@ DATE_HEADER = "Date"
 
 def main():
     try:
-        # Download CSV
-        response = urllib.request.urlopen(CSV_URL)
+        # Download CSV with a browser disguise (User-Agent header)
+        # This tells the gov.uk server we are a Chrome browser, preventing a 403 error
+        req = urllib.request.Request(
+            CSV_URL, 
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+        )
+        
+        response = urllib.request.urlopen(req)
         lines = [l.decode('utf-8-sig') for l in response.readlines()]
         
         # Parse CSV
