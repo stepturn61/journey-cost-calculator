@@ -281,6 +281,54 @@
             margin-bottom: 2rem;
         }
 
+                /* Accordion Tips */
+        .tip-item {
+            background-color: var(--bg);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .tip-item:hover {
+            border-color: var(--border);
+        }
+        
+        .tip-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .tip-arrow {
+            transition: transform 0.2s;
+            color: var(--muted);
+        }
+        
+        /* When 'open' is added, rotate the arrow */
+        .tip-item.open .tip-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .tip-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+            color: var(--muted);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        /* When 'open' is added, expand the content */
+        .tip-item.open .tip-content {
+            max-height: 200px; /* Must be larger than the text */
+            margin-top: 0.75rem;
+        }
+
     </style>
 </head>
 <body>
