@@ -440,177 +440,149 @@
         </div>
     </div>
 
-   <script>
-        // State variables
-        let isMiles = true;
-        let isPerLitre = true; // Default UK
-        let isMPG = true;      // Default UK
-        let isReturn = false;
-        let currentFuelType = 'petrol(E10)';
-        let livePrices = null;
+<script>
+    // State variables
+    let isMiles = true;
+    let isPerLitre = true; // Default UK
+    let isMPG = true;      // Default UK
+    let isReturn = false;
+    let currentFuelType = 'petrol';
+    let livePrices = null;
 
-        // UK Specific Constants
-        // 1 UK (Imperial) Gallon = 4.54609 Litres
-        const LITRES_PER_UK_GALLON = 4.54609;
-        const MILES_PER_KM = 0.621371;
+    // UK Specific Constants
+    const LITRES_PER_UK_GALLON = 4.54609;
+    const MILES_PER_KM = 0.621371;
 
-        // DOM Elements
-        const distanceInput = document.getElementById('distance');
-        const fuelPriceInput = document.getElementById('fuelPrice');
-        const fuelConsumptionInput = document.getElementById('fuelConsumption');
-        
-        const distUnitBtn = document.getElementById('distUnitBtn');
-        const priceUnitBtn = document.getElementById('priceUnitBtn');
-        const consumpUnitBtn = document.getElementById('consumpUnitBtn');
-        
-        const returnSwitch = document.getElementById('returnSwitch');
-        const returnRow = document.getElementById('returnRow');
-        
-        const singleCostEl = document.getElementById('singleCost');
-        const returnCostEl = document.getElementById('returnCost');
+    // DOM Elements
+    const distanceInput = document.getElementById('distance');
+    const fuelPriceInput = document.getElementById('fuelPrice');
+    const fuelConsumptionInput = document.getElementById('fuelConsumption');
+    
+    const distUnitBtn = document.getElementById('distUnitBtn');
+    const priceUnitBtn = document.getElementById('priceUnitBtn');
+    const consumpUnitBtn = document.getElementById('consumpUnitBtn');
+    
+    const returnSwitch = document.getElementById('returnSwitch');
+    const returnRow = document.getElementById('returnRow');
+    
+    const singleCostEl = document.getElementById('singleCost');
+    const returnCostEl = document.getElementById('returnCost');
 
-        // Event listeners for live calculation
-        distanceInput.addEventListener('input', calculate);
-        fuelPriceInput.addEventListener('input', calculate);
-        fuelConsumptionInput.addEventListener('input', calculate);
+    // Event listeners for live calculation
+    distanceInput.addEventListener('input', calculate);
+    fuelPriceInput.addEventListener('input', calculate);
+    fuelConsumptionInput.addEventListener('input', calculate);
 
-        // Fetch Live Prices on load from our clean JSON file
-        window.onload = () => {
-            fetch('./prices.json')
-                .then(res => res.json())
-                .then(data => {
-                    livePrices = data;
-                    
-                    // Show the live date badge from your json
-                    const liveBadge = document.getElementById('liveBadge');
-                    const liveDate = document.getElementById('liveDate');
-                    if (liveBadge) liveBadge.classList.remove('hidden');
-                    if (liveDate) liveDate.innerText = data.last_updated;
-                    
-                    updateLivePrice();
-                })
-                .catch(err => console.log("Live prices not available, using manual input.", err));
-        };
+    // Fetch Live Prices on load
+    window.onload = () => {
+        fetch('./prices.json')
+            .then(res => res.json())
+            .then(data => {
+                livePrices = data;
+                document.getElementById('liveBadge').classList.remove('hidden');
+                document.getElementById('liveDate').innerText = data.last_updated;
+                updateLivePrice();
+            })
+            .catch(err => console.log("Live prices not available, using manual input."));
+    };
 
-        function setFuelType(type) {
-            currentFuelType = type;
-            
-            // Grab the button elements safely
-            const petrolBtn = document.getElementById('petrol(E10)Btn');
-            const dieselBtn = document.getElementById('dieselBtn');
-            
-            // Clean up the color toggles: if type contains 'petrol', light up petrol, otherwise diesel
-            if (petrolBtn && dieselBtn) {
-                if (type.includes('petrol')) {
-                    petrolBtn.classList.add('active');
-                    dieselBtn.classList.remove('active');
-                } else {
-                    dieselBtn.classList.add('active');
-                    petrolBtn.classList.remove('active');
-                }
-            }
-            
-            updateLivePrice();
-            calculate();
+    function setFuelType(type) {
+        currentFuelType = type;
+        document.getElementById('petrolBtn').classList.toggle('active', type === 'petrol');
+        document.getElementById('dieselBtn').classList.toggle('active', type === 'diesel');
+        updateLivePrice();
+        calculate();
+    }
+
+    function updateLivePrice() {
+        if (livePrices) {
+            if (!isPerLitre) togglePriceUnit(); // Ensure we are on /Litre to apply live price
+            fuelPriceInput.value = currentFuelType === 'petrol' ? livePrices.unleaded : livePrices.diesel;
+        }
+    }
+
+    function toggleDistanceUnit() {
+        isMiles = !isMiles;
+        distUnitBtn.innerText = isMiles ? 'Miles' : 'KM';
+        distUnitBtn.classList.toggle('active');
+        updateConsumptionLabel();
+        calculate();
+    }
+
+    function togglePriceUnit() {
+        isPerLitre = !isPerLitre;
+        priceUnitBtn.innerText = isPerLitre ? '/ Litre' : '/ Gallon';
+        priceUnitBtn.classList.toggle('active');
+        calculate();
+    }
+
+    function toggleConsumptionUnit() {
+        isMPG = !isMPG;
+        updateConsumptionLabel();
+        consumpUnitBtn.classList.toggle('active');
+        calculate();
+    }
+
+    function updateConsumptionLabel() {
+        if (isMPG) {
+            consumpUnitBtn.innerText = 'MPG';
+            fuelConsumptionInput.placeholder = 'e.g. 35';
+        } else {
+            consumpUnitBtn.innerText = 'L/100km';
+            fuelConsumptionInput.placeholder = 'e.g. 8';
+        }
+    }
+
+    function toggleReturn() {
+        isReturn = !isReturn;
+        returnSwitch.classList.toggle('active');
+        returnRow.classList.toggle('hidden');
+        calculate();
+    }
+
+    function calculate() {
+        const distance = parseFloat(distanceInput.value) || 0;
+        const price = parseFloat(fuelPriceInput.value) || 0;
+        const consumption = parseFloat(fuelConsumptionInput.value) || 0;
+
+        if (distance <= 0 || price <= 0 || consumption <= 0) {
+            singleCostEl.innerText = '£0.00';
+            returnCostEl.innerText = '£0.00';
+            return;
         }
 
-        function updateLivePrice() {
-            if (livePrices) {
-                if (!isPerLitre) togglePriceUnit(); // Ensure we are on /Litre to apply live price
-                
-                // Flexible check: if the fuel type has 'petrol' in its name, use petrol price, else diesel
-                if (currentFuelType.includes('petrol')) {
-                    fuelPriceInput.value = livePrices.petrol_per_litre;
-                } else {
-                    fuelPriceInput.value = livePrices.diesel_per_litre;
-                }
-            }
+        // Step 1: Convert distance to Miles
+        const distanceMiles = isMiles ? distance : distance * MILES_PER_KM;
+
+        // Step 2: Calculate UK Gallons needed
+        let ukGallonsNeeded = 0;
+        if (isMPG) {
+            ukGallonsNeeded = distanceMiles / consumption;
+        } else {
+            const distanceKm = isMiles ? distance / MILES_PER_KM : distance;
+            const litresNeeded = (consumption / 100) * distanceKm;
+            ukGallonsNeeded = litresNeeded / LITRES_PER_UK_GALLON;
         }
 
-        function toggleDistanceUnit() {
-            isMiles = !isMiles;
-            distUnitBtn.innerText = isMiles ? 'Miles' : 'KM';
-            distUnitBtn.classList.toggle('active');
-            updateConsumptionLabel();
-            calculate();
+        // Step 3: Calculate Price per UK Gallon
+        let pricePerGallon = price;
+        if (isPerLitre) {
+            pricePerGallon = price * LITRES_PER_UK_GALLON;
         }
 
-        function togglePriceUnit() {
-            isPerLitre = !isPerLitre;
-            priceUnitBtn.innerText = isPerLitre ? '/ Litre' : '/ Gallon';
-            priceUnitBtn.classList.toggle('active');
-            calculate();
-        }
+        // Step 4: Final Cost
+        const singleTripCost = ukGallonsNeeded * pricePerGallon;
+        const returnTripCost = singleTripCost * 2;
 
-        function toggleConsumptionUnit() {
-            isMPG = !isMPG;
-            updateConsumptionLabel();
-            consumpUnitBtn.classList.toggle('active');
-            calculate();
-        }
+        // Update UI
+        singleCostEl.innerText = `£${singleTripCost.toFixed(2)}`;
+        returnCostEl.innerText = `£${returnTripCost.toFixed(2)}`;
+    }
 
-        function updateConsumptionLabel() {
-            if (isMPG) {
-                consumpUnitBtn.innerText = 'MPG';
-                fuelConsumptionInput.placeholder = 'e.g. 35';
-            } else {
-                consumpUnitBtn.innerText = 'L/100km';
-                fuelConsumptionInput.placeholder = 'e.g. 8';
-        }
-
-        function toggleReturn() {
-            isReturn = !isReturn;
-            returnSwitch.classList.toggle('active');
-            returnRow.classList.toggle('hidden');
-            calculate();
-        }
-
-        function calculate() {
-            const distance = parseFloat(distanceInput.value) || 0;
-            const price = parseFloat(fuelPriceInput.value) || 0;
-            const consumption = parseFloat(fuelConsumptionInput.value) || 0;
-
-            if (distance <= 0 || price <= 0 || consumption <= 0) {
-                singleCostEl.innerText = '£0.00';
-                returnCostEl.innerText = '£0.00';
-                return;
-            }
-
-            // Step 1: Convert distance to Miles
-            const distanceMiles = isMiles ? distance : distance * MILES_PER_KM;
-
-            // Step 2: Calculate UK Gallons needed
-            let ukGallonsNeeded = 0;
-            if (isMPG) {
-                ukGallonsNeeded = distanceMiles / consumption;
-            } else {
-                // User entered L/100km. Convert distance to KM to find total Litres, then UK Gallons
-                const distanceKm = isMiles ? distance / MILES_PER_KM : distance;
-                const litresNeeded = (consumption / 100) * distanceKm;
-                ukGallonsNeeded = litresNeeded / LITRES_PER_UK_GALLON;
-            }
-
-            // Step 3: Calculate Price per UK Gallon
-            let pricePerGallon = price;
-            if (isPerLitre) {
-                // Convert £/L to £/Gallon
-                pricePerGallon = price * LITRES_PER_UK_GALLON;
-            }
-
-            // Step 4: Final Cost
-            const singleTripCost = ukGallonsNeeded * pricePerGallon;
-            const returnTripCost = singleTripCost * 2;
-
-            // Update UI
-            singleCostEl.innerText = `£${singleTripCost.toFixed(2)}`;
-            returnCostEl.innerText = `£${returnTripCost.toFixed(2)}`;
-        }
-
-        // Accordion functionality for tips
-        function toggleTip(element) {
-            // 'element' is the div with the class 'tip-item'
-            element.classList.toggle('open');
-        }
-    </script>
+    // Accordion functionality for tips
+    function toggleTip(element) {
+        element.classList.toggle('open');
+    }
+</script>
 </body>
 </html>
