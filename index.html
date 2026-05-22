@@ -94,83 +94,94 @@
             background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
-        /* --- CALCULATOR SECTIONS & ACCORDION STYLES --- */
+       /* --- CALCULATOR SECTIONS & ACCORDION STYLES --- */
         .content-section {
             margin-top: 2rem;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            /* MATCH CONTAINER WIDTH: Constrains and centers everything perfectly */
+            max-width: 600px; 
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            padding: 0 1rem;
+            box-sizing: border-box;
         }
 
         .content-card {
-            background: #ffffff;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e5e7eb;
+            background: var(--card-background, #ffffff); /* Fallback to theme card color */
+            padding: 1.75rem;
+            border-radius: 16px; /* Matches modern smoother card curves */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border-color, #e5e7eb);
         }
 
         .content-card h2 {
             margin-top: 0;
-            color: #1f2937;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #f3f4f6;
+            color: var(--text-main, #1f2937);
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
             padding-bottom: 0.5rem;
         }
 
         .content-card p {
-            color: #4b5563;
+            color: var(--text-muted, #4b5563);
             line-height: 1.6;
             margin-bottom: 1rem;
+            font-size: 0.95rem;
         }
 
         /* The Tip Item Wrapper Box */
         .tip-item {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border: 1px solid var(--border-color, #e5e7eb);
+            border-radius: 12px;
             margin-bottom: 0.75rem;
             overflow: hidden;
-            background: #f9fafb;
+            background: var(--bg-secondary, #f9fafb);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .tip-item:hover {
-            background: #f3f4f6;
-            border-color: #d1d5db;
+            background: var(--bg-hover, #f3f4f6);
+            transform: translateY(-1px);
         }
 
         /* The clickable title bar */
         .tip-title {
-            padding: 1rem;
+            padding: 1.1rem;
             font-weight: 600;
-            color: #374151;
+            color: var(--text-main, #374151);
             display: flex;
             justify-content: space-between;
             align-items: center;
             user-select: none;
+            font-size: 0.95rem;
         }
 
         .tip-arrow {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             transition: transform 0.2s ease;
-            color: #9ca3af;
+            color: var(--text-muted, #9ca3af);
         }
 
         /* Hidden content block by default */
         .tip-content {
             display: none;
-            padding: 1rem;
-            background: #ffffff;
-            border-top: 1px solid #e5e7eb;
-            color: #4b5563;
+            padding: 1.1rem;
+            background: var(--card-background, #ffffff);
+            border-top: 1px solid var(--border-color, #e5e7eb);
+            color: var(--text-muted, #4b5563);
             line-height: 1.6;
+            font-size: 0.92rem;
         }
 
-        /* When clicked, Javascript adds the 'open' class to reveal the content */
+        /* When clicked, Javascript adds the 'open' class */
         .tip-item.open {
-            border-color: #3b82f6; /* Adds a nice blue highlight when open */
+            border-color: #3b82f6; 
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
         }
 
         .tip-item.open .tip-content {
@@ -178,20 +189,24 @@
         }
 
         .tip-item.open .tip-arrow {
-            transform: rotate(180deg); /* Flips the arrow upside down dynamically */
+            transform: rotate(180deg);
             color: #3b82f6;
         }
 
         /* Ad placeholder box styling */
         .ad-placeholder {
-            background: #f3f4f6;
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 2rem;
+            background: var(--bg-secondary, #f3f4f6);
+            border: 2px dashed var(--border-color, #d1d5db);
+            border-radius: 12px;
+            padding: 2.5rem 1.5rem;
             text-align: center;
-            color: #9ca3af;
+            color: var(--text-muted, #9ca3af);
             font-size: 0.875rem;
             font-weight: 500;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
     </style>
 </head>
