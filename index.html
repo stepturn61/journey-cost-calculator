@@ -93,6 +93,106 @@
             margin-bottom: 1rem; padding: 0.5rem; border-radius: 0.5rem;
             background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
         }
+
+        /* --- CALCULATOR SECTIONS & ACCORDION STYLES --- */
+        .content-section {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .content-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .content-card h2 {
+            margin-top: 0;
+            color: #1f2937;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .content-card p {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* The Tip Item Wrapper Box */
+        .tip-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tip-item:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        /* The clickable title bar */
+        .tip-title {
+            padding: 1rem;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .tip-arrow {
+            font-size: 0.75rem;
+            transition: transform 0.2s ease;
+            color: #9ca3af;
+        }
+
+        /* Hidden content block by default */
+        .tip-content {
+            display: none;
+            padding: 1rem;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        /* When clicked, Javascript adds the 'open' class to reveal the content */
+        .tip-item.open {
+            border-color: #3b82f6; /* Adds a nice blue highlight when open */
+        }
+
+        .tip-item.open .tip-content {
+            display: block;
+        }
+
+        .tip-item.open .tip-arrow {
+            transform: rotate(180deg); /* Flips the arrow upside down dynamically */
+            color: #3b82f6;
+        }
+
+        /* Ad placeholder box styling */
+        .ad-placeholder {
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
