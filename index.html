@@ -508,7 +508,10 @@
             } else {
                 consumpUnitBtn.innerText = 'L/100km';
                 fuelConsumptionInput.placeholder = 'e.g. 8';
-            }
+        }
+    
+        function toggleTip(element) {
+            element.classList.toggle('open');
         }
 
         function toggleReturn() {
