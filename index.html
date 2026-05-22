@@ -14,12 +14,16 @@
             --text: #f8fafc;
             --muted: #94a3b8;
             --accent: #3b82f6;
+            --accent-hover: #2563eb;
             --success: #10b981;
-            --petrol: #f59e0b;
-            --diesel: #8b5cf6;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
         body {
             background-color: var(--bg);
@@ -42,172 +46,241 @@
             margin-bottom: 2rem;
         }
 
-        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; font-weight: 600; }
-        .input-group { margin-bottom: 1.25rem; }
-        label { display: block; font-size: 0.875rem; color: var(--muted); margin-bottom: 0.5rem; font-weight: 500; }
-        .input-row { display: flex; gap: 0.5rem; }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+        }
 
         input[type="number"] {
-            flex: 1; background-color: var(--bg); border: 1px solid var(--border);
-            border-radius: 0.75rem; padding: 0.75rem 1rem; color: var(--text);
-            font-size: 1rem; outline: none; transition: border-color 0.2s;
+            flex: 1;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
         }
-        input[type="number"]:focus { border-color: var(--accent); }
 
-        .btn-group { display: flex; gap: 0.5rem; width: 100%; }
+        input[type="number"]:focus {
+            border-color: var(--accent);
+        }
 
         .toggle-btn {
-            flex: 1; background-color: var(--bg); border: 1px solid var(--border);
-            border-radius: 0.75rem; color: var(--muted); padding: 0.75rem;
-            font-size: 0.875rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; text-align: center;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            color: var(--muted);
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 90px;
+            text-align: center;
         }
-        .toggle-btn:hover { border-color: var(--accent); color: var(--text); }
-        .toggle-btn.active { border-color: var(--accent); background-color: var(--accent); color: white; }
-        
-        .toggle-btn.active.petrol(E10) { background-color: var(--petrol(E10)); border-color: var(--petrol(E10)); }
-        .toggle-btn.active.diesel { background-color: var(--diesel); border-color: var(--diesel); }
+
+        .toggle-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .toggle-btn.active {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
 
         .switch-container {
-            display: flex; align-items: center; justify-content: space-between;
-            background-color: var(--bg); border: 1px solid var(--border);
-            border-radius: 0.75rem; padding: 0.5rem 1rem; cursor: pointer;
-            margin-bottom: 1.25rem; transition: border-color 0.2s;
-        }
-        .switch-container:hover { border-color: var(--accent); }
-        .switch-label { font-size: 1rem; font-weight: 500; }
-        .switch-track { width: 44px; height: 24px; background-color: var(--border); border-radius: 12px; position: relative; transition: background-color 0.2s; }
-        .switch-track.active { background-color: var(--accent); }
-        .switch-thumb { width: 20px; height: 20px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.2s; }
-        .switch-track.active .switch-thumb { transform: translateX(20px); }
-
-        .results { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
-        .result-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .result-label { color: var(--muted); font-size: 1rem; }
-        .result-value { font-size: 1.25rem; font-weight: 600; }
-        .result-value.highlight { color: var(--success); font-size: 1.5rem; }
-        .hidden { display: none; }
-
-        .live-prices-badge {
-            text-align: center; font-size: 0.75rem; color: var(--muted);
-            margin-bottom: 1rem; padding: 0.5rem; border-radius: 0.5rem;
-            background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-       /* --- CALCULATOR SECTIONS & ACCORDION STYLES --- */
-        .content-section {
-            margin-top: 2rem;
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            /* MATCH CONTAINER WIDTH: Constrains and centers everything perfectly */
-            max-width: 600px; 
-            margin-left: auto;
-            margin-right: auto;
-            width: 100%;
-            padding: 0 1rem;
-            box-sizing: border-box;
-        }
-
-        .content-card {
-            background: var(--card-background, #ffffff); /* Fallback to theme card color */
-            padding: 1.75rem;
-            border-radius: 16px; /* Matches modern smoother card curves */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-            border: 1px solid var(--border-color, #e5e7eb);
-        }
-
-        .content-card h2 {
-            margin-top: 0;
-            color: var(--text-main, #1f2937);
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.5rem;
-        }
-
-        .content-card p {
-            color: var(--text-muted, #4b5563);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        /* The Tip Item Wrapper Box */
-        .tip-item {
-            border: 1px solid var(--border-color, #e5e7eb);
-            border-radius: 12px;
-            margin-bottom: 0.75rem;
-            overflow: hidden;
-            background: var(--bg-secondary, #f9fafb);
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.5rem 1rem;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 1.25rem;
+            transition: border-color 0.2s;
         }
 
-        .tip-item:hover {
-            background: var(--bg-hover, #f3f4f6);
-            transform: translateY(-1px);
+        .switch-container:hover {
+            border-color: var(--accent);
         }
 
-        /* The clickable title bar */
-        .tip-title {
-            padding: 1.1rem;
-            font-weight: 600;
-            color: var(--text-main, #374151);
+        .switch-label {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .switch-track {
+            width: 44px;
+            height: 24px;
+            background-color: var(--border);
+            border-radius: 12px;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .switch-track.active {
+            background-color: var(--accent);
+        }
+
+        .switch-thumb {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+
+        .switch-track.active .switch-thumb {
+            transform: translateX(20px);
+        }
+
+        .results {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .result-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            user-select: none;
+            margin-bottom: 1rem;
+        }
+
+        .result-label {
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .result-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .result-value.highlight {
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Content / SEO Section Styles */
+        .content-section {
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 2rem;
+        }
+
+        .content-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+        }
+
+        .content-card p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .tip-item {
+            background-color: var(--bg);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .tip-item:hover {
+            border-color: var(--border);
+        }
+
+        .tip-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
             font-size: 0.95rem;
         }
 
         .tip-arrow {
-            font-size: 0.8rem;
-            transition: transform 0.2s ease;
-            color: var(--text-muted, #9ca3af);
-        }
-
-        /* Hidden content block by default */
-        .tip-content {
-            display: none;
-            padding: 1.1rem;
-            background: var(--card-background, #ffffff);
-            border-top: 1px solid var(--border-color, #e5e7eb);
-            color: var(--text-muted, #4b5563);
-            line-height: 1.6;
-            font-size: 0.92rem;
-        }
-
-        /* When clicked, Javascript adds the 'open' class */
-        .tip-item.open {
-            border-color: #3b82f6; 
-            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
-        }
-
-        .tip-item.open .tip-content {
-            display: block;
+            transition: transform 0.2s;
+            color: var(--muted);
         }
 
         .tip-item.open .tip-arrow {
             transform: rotate(180deg);
-            color: #3b82f6;
         }
 
-        /* Ad placeholder box styling */
-        .ad-placeholder {
-            background: var(--bg-secondary, #f3f4f6);
-            border: 2px dashed var(--border-color, #d1d5db);
-            border-radius: 12px;
-            padding: 2.5rem 1.5rem;
-            text-align: center;
-            color: var(--text-muted, #9ca3af);
+        .tip-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            color: var(--muted);
             font-size: 0.875rem;
-            font-weight: 500;
-            max-width: 600px;
-            width: 100%;
-            margin: 0 auto;
-            box-sizing: border-box;
+            line-height: 1.5;
         }
+
+        .tip-item.open .tip-content {
+            max-height: 200px;
+            margin-top: 0.75rem;
+        }
+
+        /* Placeholder for Ad */
+        .ad-placeholder {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--card);
+            border: 1px dashed var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
     </style>
 </head>
 <body>
