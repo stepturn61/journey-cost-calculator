@@ -557,10 +557,6 @@
                 consumpUnitBtn.innerText = 'L/100km';
                 fuelConsumptionInput.placeholder = 'e.g. 8';
         }
-    
-        function toggleTip(element) {
-            element.classList.toggle('open');
-        }
 
         function toggleReturn() {
             isReturn = !isReturn;
@@ -608,6 +604,12 @@
             // Update UI
             singleCostEl.innerText = `£${singleTripCost.toFixed(2)}`;
             returnCostEl.innerText = `£${returnTripCost.toFixed(2)}`;
+        }
+
+        // Accordion functionality for tips
+        function toggleTip(element) {
+            // 'element' is the div with the class 'tip-item'
+            element.classList.toggle('open');
         }
     </script>
 </body>
